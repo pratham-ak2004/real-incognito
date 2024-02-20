@@ -56,7 +56,10 @@ const config = {
 			},
 			fontFamily: {
 				sans: [...fontFamily.sans]
-			}
+			},
+			backgroundImage: theme => ({
+				'gradient-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
+			  })
 		}
 	},
 };
