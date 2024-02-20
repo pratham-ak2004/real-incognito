@@ -1,4 +1,4 @@
-import { BROWSER } from 'esm-env';
+import { browser } from '$app/environment';
 import { persisted } from '$lib/stores/svelte-persisted-store';
 
 /**
@@ -8,7 +8,7 @@ import { persisted } from '$lib/stores/svelte-persisted-store';
 /** @type {import('svelte/store').Writable<Theme>} */
 export const theme = persisted('svelte:theme', {
 	preference: 'system',
-	current: BROWSER
+	current: browser
 		? window.matchMedia('(prefers-color-scheme: dark)').matches
 			? 'dark'
 			: 'light'
@@ -16,7 +16,7 @@ export const theme = persisted('svelte:theme', {
 });
 
 theme.subscribe(($theme) => {
-	if (!BROWSER) return;
+	if (!browser) return;
 
 	document.body.classList.remove('light', 'dark');
 	document.body.classList.add($theme.current);
