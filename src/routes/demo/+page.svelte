@@ -8,7 +8,7 @@
     // to do
     let features:string[]
     let userData: any[] = [];
-    let anonymizedData: object[] = [];
+    let anonymizedData: any[] = [];
     let jsonArray: object[] = [];
 
     function readFile(file: Blob) {
@@ -46,6 +46,13 @@
           console.error(err);
       }
     }
+
+    const handleAnonymizeData = (e:any) => {
+      e.preventDefault();
+      anonymizedData = userData;
+    }
+
+
    /*
     userData = [
       {
@@ -173,18 +180,18 @@
     */
   </script>
   
-  <main>
-    <div class="mx-4 mt-8 border p-4 min-w-fit min-h-fit">
+  <main class="flex flex-col items-center">
+    <div class="mx-4 mt-8 border p-4 w-11/12 min-h-fit flex items-center flex-col">
       <div class="flex flex-row w-full items-center gap-1.5 mb-4 justify-between">
         <!-- <Label for="Dataset">Click here to upload your dataset</Label> -->
         <Input id="picture" type="file" accept=".csv" on:input={handleGetFile} class="max-w-80"/>
-        <Button>Anonymize data</Button>
+        <Button on:click={handleAnonymizeData}>Anonymize data</Button>
       </div>
       {#if userData.length !== 0}  
 
-        <h1 class="w-full mt-6 mb-4 font-bold text-center max-w-screen-lg">Raw Data</h1>
-        <div class="max-h-96 overflow-y-scroll overflow-x-scroll border-2 border-slate-200 p-4">
-          <Table.Root>
+        <h1 class="w-full mt-6 mb-4 font-bold text-center">Raw Data</h1>
+        <div class="max-h-96 overflow-y-scroll border-2 border-slate-200 p-4 w-full object-cover">
+          <Table.Root class="overflow-x-visible">
             <Table.Caption>A list of your recent invoices.</Table.Caption>
             <Table.Header>
               <Table.Row>
@@ -194,7 +201,6 @@
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              <!-- to do -->
               {#each userData as tuple, i (i)}
                 <Table.Row>
                   {#each features as feature, j (j)}
@@ -210,8 +216,9 @@
         <p class="text-center">No data to display</p>
       {/if}
       {#if anonymizedData.length > 0}
+      <!-- to do -->
       <h1 class="w-full mt-6 mb-4 font-bold text-center">Anonymized Data</h1>
-        <div class="max-h-96 overflow-y-scroll overflow-x-scroll border-2 border-slate-200 p-4">
+        <div class="max-h-96 overflow-y-scroll border-2 border-slate-200 p-4 w-full object-cover">
           <Table.Root>
             <Table.Caption>A list of your recent invoices.</Table.Caption>
             <Table.Header>
@@ -222,18 +229,17 @@
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              <!-- to do -->
               {#each userData as tuple, i (i)}
                 <Table.Row>
-                  <Table.Cell>{tuple.invoice}</Table.Cell>
-                  <Table.Cell>{tuple.paymentStatus}</Table.Cell>
-                  <Table.Cell>{tuple.paymentMethod}</Table.Cell>
-                  <Table.Cell>{tuple.totalAmount}</Table.Cell>
+                  {#each features as feature, j (j)}
+                    <Table.Cell>{jsonArray[i][feature]}</Table.Cell>
+                  {/each}
                 </Table.Row>
               {/each}
             </Table.Body>
           </Table.Root>
         </div>
+
       {/if}
     </div>
   </main>
