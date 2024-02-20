@@ -1,23 +1,28 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Separator } from "$lib/components/ui/customSeparator";
+	import { Separator } from '$lib/components/ui/customSeparator';
+	import { redirect } from '@sveltejs/kit';
 </script>
 
 <main>
-	<div class="w-full h-screen flex flex-col">
-		<div class="flex justify-center">
-			<img src="/images/illuminati.png" class=" max-w-5xl min-w-40 mt-10 mx-4" alt="">
-		</div>
-		<h1 class="text-4xl mx-auto mt-6"><b>real-incognito</b></h1>
+	<div class="flex h-screen w-full flex-col items-center justify-center">
+		<img src="/images/illuminati.png" class="mx-4 min-w-16" alt="" />
+		<h1 class="mx-auto mb-20 mt-4 text-4xl"><b>real-incognito</b></h1>
 	</div>
-	<Separator class="h-1 bg-[#ed613d]"/>
-	<div class="w-full h-auto p-6 mt-4 flex flex-col items-center gap-6">
-		<img src="https://picsum.photos/200/300" class="w-full mx-auto max-w-4xl aspect-video object-cover rounded-md" alt="">
-		<div class="w-full max-w-4xl flex flex-col lg:items-start items-center">
+	<Separator class="h-1 bg-[#ed613d]" />
+	<div class="mt-4 flex h-auto w-full flex-col items-center gap-6 p-6">
+		<img
+			src="/images/iteration3.png"
+			class="mx-auto aspect-video w-full max-w-4xl rounded-md object-cover"
+			alt=""
+		/>
+		<div class="flex w-full max-w-2xl flex-col items-center lg:items-start">
 			<div class="text-justify lg:text-left">
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui voluptatibus sint maiores quaerat quisquam recusandae atque voluptas laborum dolore, praesentium voluptate distinctio earum eos quasi. Animi, dolore. Temporibus, eos voluptate.
+				This is the architecture used by the real-incognito project. Further details can be found in
+				the documentation linked below!
 			</div>
-			<Button class="mt-4">click me</Button>
+
+			<a class="mt-4" href="https://real-incognito-docs.vercel.app"><Button>Docs</Button></a>
 		</div>
 	</div>
 </main>
