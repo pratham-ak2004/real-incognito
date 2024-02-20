@@ -1,6 +1,6 @@
 <script>
 	import { theme } from '$lib/stores';
-	import { BROWSER } from 'esm-env';
+	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
 
 	export let label = 'Dark mode';
@@ -30,7 +30,7 @@
 	let query;
 
 	$: {
-		if (!BROWSER) break $;
+		if (!browser) break $;
 
 		query?.removeEventListener('change', cb);
 
@@ -50,7 +50,7 @@
 	aria-pressed={$theme.current === 'dark' ? 'true' : 'false'}
 	aria-label={label}
 >
-	{#if BROWSER}
+	{#if browser}
 		{#if $theme.current === 'dark'}
 			<svg
 				class="h-5 w-5"
