@@ -11,6 +11,9 @@
     let anonymizedData: any[] = [];
     let jsonArray: object[] = [];
 
+    let originaCSV:any;
+    let anonymizedCSV:any;
+
     function readFile(file: Blob) {
       return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -34,22 +37,68 @@
 
     const handleGetFile = async(e:any) => {
       const file = e.target.files[0];
-      console.log(file);
+      originaCSV = file;
       try {
         const csvData = await readFile(file);
         jsonArray = await csvtojson().fromString(csvData as string);
         userData = objectToStringArray(jsonArray);
         features = getFeatures(jsonArray) as string[];
-        console.log(userData);
         
       } catch (err) {
           console.error(err);
       }
     }
 
-    const handleAnonymizeData = (e:any) => {
+     async function readCSVChunk(readableStream: ReadableStream) {
+      const reader = readableStream.getReader();
+      let data:any;
+      let result = await reader.read();
+      
+      // await reader.read().then(({ done, value }) => {
+      //   if(done) {
+      //     return;
+      //   }else{
+      //     console.log(value);
+      //     data.append(value)
+      //   }
+      // });
+      // return data;
+
+      while (!result.done) {
+        let value = new TextDecoder("utf-8").decode(result.value);
+        data += value;
+        result = await reader.read();
+      }
+      const jsonArray = await csvtojson().fromString(data);
+      await console.log(jsonArray);
+      
+      return jsonArray;
+     }
+
+    const handleAnonymizeData = async(e:any) => {
       e.preventDefault();
       anonymizedData = userData;
+      const formData = new FormData();
+      formData.append('message', originaCSV);
+
+      await fetch(`https://anonymizer-mwnxl4smaa-el.a.run.app/`, {
+        method: "POST",
+        body: formData,
+      })
+        .then(async(response) => {
+          console.log(response.body);
+          if (response.body) {
+            console.log(readCSVChunk(response.body));
+          }
+          
+        })
+        .then((data) => {
+          anonymizedData = data;
+          console.log(anonymizedData);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     }
 
 

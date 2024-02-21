@@ -40,6 +40,7 @@
 		"bits-ui": "^0.18.1",
 		"clsx": "^2.1.0",
 		"cmdk-sv": "^0.0.13",
+		"csv-parser": "^3.0.0",
 		"csvtojson": "^2.0.10",
 		"lucide-svelte": "^0.331.0",
 		"radix-icons-svelte": "^1.2.1",
