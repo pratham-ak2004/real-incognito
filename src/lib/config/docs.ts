@@ -13,7 +13,7 @@ export const docsConfig: DocsConfig = {
 		},
 		{
 			title: 'Documentation',
-			href: 'https://dual-gan-anonymizer.vercel.app',
+			href: 'https://real-incognito-docs.vercel.app',
 			external: true
 		},
 		{
@@ -27,13 +27,18 @@ export const docsConfig: DocsConfig = {
 			title: 'Demonstration',
 			items: [
 				{
-					title: 'GAN',
+					title: 'Upload Data (csv)',
 					href: '/demo',
 					items: []
 				},
 				{
-					title: 'Uploading Data',
-					href: '/upload',
+					title: 'Get Anonymized Data',
+					href: '/demo',
+					items: []
+				},
+				{
+					title: 'Download Anonymized Data',
+					href: '/demo',
 					items: []
 				}
 			]
@@ -43,7 +48,7 @@ export const docsConfig: DocsConfig = {
 			items: [
 				{
 					title: 'Documentation',
-					href: 'https://dual-gan-anonymizer.vercel.app',
+					href: 'https://real-incognito-docs.vercel.app',
 					items: []
 				}
 			]
