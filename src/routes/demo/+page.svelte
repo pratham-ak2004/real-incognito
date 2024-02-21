@@ -4,19 +4,16 @@
 	// import { Label } from "$lib/components/ui/label";
 	import { Button } from '$lib/components/ui/button';
 	import csvtojson from 'csvtojson';
-  import { json2csv } from 'json-2-csv';
-  
 
 	// to do
 	let features: string[];
 	let userData: any[] = [];
-  let anonymizedStringArray: any[] = [];
+	let anonymizedStringArray: any[] = [];
 	let anonymizedData: any[] = [];
 	let jsonArray: object[] = [];
-  let dataObject;
 
-  let originalCSV: string | Blob;
-  let anonymizedCSV;
+	let originalCSV: string | Blob;
+	let anonymizedCSV: string | Blob;
 
 	function readFile(file: Blob) {
 		return new Promise((resolve, reject) => {
@@ -41,8 +38,8 @@
 
 	const handleGetFile = async (e: any) => {
 		const file = e.target.files[0];
-    originalCSV = file;
-		
+		originalCSV = file;
+
 		try {
 			const csvData = await readFile(file);
 			jsonArray = await csvtojson().fromString(csvData as string);
@@ -54,35 +51,43 @@
 		}
 	};
 
-  async function convertStringToCSV (file: string){
-    const lines = file.split('\n');
-    const headers = lines[0].split(',');
-    const data = [];
+	async function convertStringToCSV(file: string) {
+		const lines = file.split('\n');
+		const headers = lines[0].split(',');
+		const data = [];
 
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',');
-    const obj = JSON.parse(
-      JSON.stringify(
-        headers.reduce((prev, header, i) => {
-            (prev as { [key: string]: any })[header] = values[i];
-          return prev;
-        }, {})
-      
-      )
-    )
-    data.push(obj);
-  }
+		for (let i = 1; i < lines.length; i++) {
+			const values = lines[i].split(',');
+			const obj = JSON.parse(
+				JSON.stringify(
+					headers.reduce((prev, header, i) => {
+						(prev as { [key: string]: any })[header] = values[i];
+						return prev;
+					}, {})
+				)
+			);
+			data.push(obj);
+		}
+		return data;
+	}
 
-  return data
-  
-  }
+	function convertJsonToCsv(dataObject: object[]) {
+		// Get the headers (object keys)
+		const headers = features;
 
-  async function convertObjectToCSV (dataObject: object[]) {
-    return await json2csv(dataObject);
-  }
+		// Map each object in the array to a CSV row
+		const rows = jsonArray.map((obj) => {
+			return headers.map((header: string) => obj[header as keyof typeof obj]).join(',');
+		});
 
-	const handleAnonymizeData = (e:any) => {
-    e.preventDefault();
+		// Combine the headers and rows into a single CSV string
+		const csv = [headers.join(',')].concat(rows).join('\n');
+
+		return csv;
+	}
+
+	const handleAnonymizeData = (e: any) => {
+		e.preventDefault();
 
 		const formData = new FormData();
 		formData.append('file', originalCSV);
@@ -97,50 +102,49 @@
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
 				}
-        
+
 				return response.json();
 			})
-			.then(async(data) => {
-        console.log(typeof(data));
-        console.log(data);
-        
-        anonymizedData = await convertStringToCSV(data);
-        console.log(anonymizedData);
-        
-        
-        anonymizedCSV = convertObjectToCSV(await anonymizedData)
-        console.log(anonymizedCSV);
-        
+			.then(async (data) => {
+				console.log(typeof data);
+				console.log(data);
 
-        anonymizedStringArray = objectToStringArray(anonymizedData);
-        console.log(anonymizedStringArray);
-        
+				anonymizedData = await convertStringToCSV(data);
+				console.log(anonymizedData);
+
+				anonymizedCSV = convertObjectToCSV(await anonymizedData);
+				console.log(anonymizedCSV);
+
+				anonymizedStringArray = objectToStringArray(anonymizedData);
+				console.log(anonymizedStringArray);
 			})
 			.catch((error) => {
 				console.error('There was a problem with your fetch operation:', error);
 			});
-
 	};
 
-  // const handleFeatureSelect = (e) => {
-  //   e.preventDefault();
-  //   const formData =
+	$: featureName = '';
 
-  //   const url = 'https://trend-predictor-mwnxl4smaa-el.a.run.app';
+	const handleFeatureSelect = (e: any) => {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append('', featureName);
+		formData.append('', originalCSV);
+		formData.append('', anonymizedCSV);
 
-	// 	fetch(url, {
-	// 		method: 'POST',
-	// 		body: formData
-	// 	})
-	// 		.then((response) => {
-	// 			if (!response.ok) {
-	// 				throw new Error('Network response was not ok');
-	// 			}
-        
-	// 			return response.json();
-	// 		})
-  // }
+		const url = 'https://trend-predictor-mwnxl4smaa-el.a.run.app';
 
+		fetch(url, {
+			method: 'POST',
+			body: formData
+		}).then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+
+			return response.json();
+		});
+	};
 </script>
 
 <main class="flex flex-col items-center">
@@ -151,10 +155,10 @@
 			<Button on:click={handleAnonymizeData} class=" w-44">Anonymize data</Button>
 		</div>
 		{#if userData.length !== 0}
-    <form class="flex w-full items-center space-x-2">
-      <Input type="text" placeholder="feature" class="w-full" />
-      <Button type="submit" class="w-48">Subscribe</Button>
-    </form>
+			<form class="flex w-full items-center space-x-2">
+				<Input type="text" placeholder="feature" class="w-full" bing:value={featureName} />
+				<Button type="submit" class="w-48">Subscribe</Button>
+			</form>
 			<h1 class="mb-4 mt-6 w-full text-center font-bold">Raw Data</h1>
 			<div class="max-h-96 w-full overflow-y-scroll border-2 border-slate-200 object-cover p-4">
 				<Table.Root class="overflow-x-visible">
@@ -184,7 +188,7 @@
 			<!-- to do -->
 			<h1 class="mb-4 mt-6 w-full text-center font-bold">Anonymized Data</h1>
 			<div class="max-h-96 w-full overflow-y-scroll border-2 border-slate-200 object-cover p-4">
-				<Table.Root>
+				<Table.Root class="overflow-x-visible">
 					<Table.Caption>A list of your recent invoices.</Table.Caption>
 					<Table.Header>
 						<Table.Row>
@@ -194,7 +198,7 @@
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{#each anonymizedData as tuple , i (i)}
+						{#each anonymizedData as tuple, i (i)}
 							<Table.Row>
 								{#each features as feature, j (j)}
 									<Table.Cell>{anonymizedData[i][feature]}</Table.Cell>
