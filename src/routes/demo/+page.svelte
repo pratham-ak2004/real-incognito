@@ -156,7 +156,7 @@
 		</div>
 		{#if userData.length !== 0}
 			<form class="flex w-full items-center space-x-2">
-				<Input type="text" placeholder="feature" class="w-full" bing:value={featureName} />
+				<Input type="text" placeholder="feature" class="w-full" bind:value={featureName} />
 				<Button type="submit" class="w-48">Subscribe</Button>
 			</form>
 			<h1 class="mb-4 mt-6 w-full text-center font-bold">Raw Data</h1>
