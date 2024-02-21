@@ -32,7 +32,7 @@
 			Contact Us
 		</a>
 		<a
-			href="https://dual-gan-anonymizer.vercel.app"
+			href="https://real-incognito-docs.vercel.app/"
 			class={cn(
 				'transition-colors hover:text-foreground/80',
 				$page.url.pathname === '/docs' ? 'text-foreground' : 'text-foreground/60'
